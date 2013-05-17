@@ -1,0 +1,5 @@
+WireSram	KEYWORD1
+writeByte	KEYWORD2
+writeBytes	KEYWORD2
+readByte	KEYWORD2
+readBytes	KEYWORD2
