@@ -16,7 +16,7 @@ void setup()
   Serial.begin(9600); 
   Serial.println("Saving String to sram");
   //write str to ram
-  sram.writeBytes(addr, 0, (byte*) "Sram Test. Dr. Who", 19);
+  sram.writeBytes(0, (byte*) "Sram Test. Dr. Who", 19);
   Serial.println("Sleeping...");
   sram.sleep();
   delay(1000);
@@ -30,7 +30,7 @@ void loop()
   sram.wake();
   Serial.print("Is sram sleeping? ");
   Serial.println(sram.isSleeping());
-  sram.readBytes(addr, 0, buffer, 19);
+  sram.readBytes(0, buffer, 19);
   Serial.print((char*)buffer);
   Serial.println(" is awesome.");
   Serial.println("Sleeping...");

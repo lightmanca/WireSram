@@ -43,9 +43,9 @@ bool WireSram::isSleeping() {
 }
 
 //Write 1 byte to i2c SRAM
-void WireSram::writeByte(int i2c_addr, word address, byte data)
+void WireSram::writeByte(word address, byte data)
 {
-  Wire.beginTransmission(i2c_addr);
+  Wire.beginTransmission(_i2cAddress);
   Wire.write((byte)lowByte(address)); 
   Wire.write((byte)highByte(address)); 
   Wire.write(data); 
@@ -53,9 +53,9 @@ void WireSram::writeByte(int i2c_addr, word address, byte data)
 }
 
 //Write data buffer to i2c SRAM
-void WireSram::writeBytes(int i2c_addr, word address, byte* data, int len)
+void WireSram::writeBytes(word address, byte* data, int len)
 {
-  Wire.beginTransmission(i2c_addr);
+  Wire.beginTransmission(_i2cAddress);
   Wire.write((byte)lowByte(address)); 
   Wire.write((byte)highByte(address)); 
   Wire.write(data, len);
@@ -63,13 +63,13 @@ void WireSram::writeBytes(int i2c_addr, word address, byte* data, int len)
 }
 
 //Read byte from i2c SRAM
-byte WireSram::readByte(int i2c_addr, word address)
+byte WireSram::readByte(word address)
 {
-  Wire.beginTransmission(i2c_addr);
+  Wire.beginTransmission(_i2cAddress);
   Wire.write((byte)lowByte(address)); 
   Wire.write((byte)highByte(address)); 
   Wire.endTransmission();
-  Wire.requestFrom(i2c_addr,1); //only one byte
+  Wire.requestFrom(_i2cAddress,1); //only one byte
 
   if(Wire.available())
   { return Wire.read(); } 
@@ -77,16 +77,21 @@ byte WireSram::readByte(int i2c_addr, word address)
 }
 
 //Read from i2c SRAM into data buffer
-void WireSram::readBytes(int i2c_addr, word address, byte* buffer, int len)
+void WireSram::readBytes(word address, byte* buffer, int len)
 {
-  Wire.beginTransmission(i2c_addr);
+  Wire.beginTransmission(_i2cAddress);
   Wire.write((byte)lowByte(address)); 
   Wire.write((byte)highByte(address)); 
   Wire.endTransmission();
-  Wire.requestFrom(i2c_addr, len); //only one byte
+  Wire.requestFrom(_i2cAddress, len); //only one byte
   int i = 0;
   while(Wire.available() && i < len) {
     *(buffer + i) = Wire.read(); 
     i++;
   } 
+}
+
+void WireSram::Erase(int startAddress, int numBytes) {
+    for(int i = startAddress; i <= numBytes; i++)
+        writeByte(i, (byte)'\0');
 }
